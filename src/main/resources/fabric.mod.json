@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "doggoclient",
+  "version": "${version}",
+  "name": "Doggoclient",
+  "description": "A very neat client if i say so myself",
+  "authors": [
+    "TheWolfKingRuler"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/doggoclient/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "me.wolfie.doggoclient.client.DoggoclientClient"
+    ],
+    "main": [
+      "me.wolfie.doggoclient.Doggoclient"
+    ]
+  },
+  "mixins": [
+    "doggoclient.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric": "*",
+    "minecraft": "1.19.2"
+  }
+}
