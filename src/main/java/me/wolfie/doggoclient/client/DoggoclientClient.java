@@ -45,7 +45,9 @@ public class DoggoclientClient implements ClientModInitializer {
 
             ClientTickEvents.END_CLIENT_TICK.register(client -> {
                 if(MinecraftClient.getInstance().world != null) {
-
+                if(client.player.getHealth() <= 0){
+                    client.player.sendMessage(Text.of("You have died at: " + client.player.getBlockPos().toShortString()));
+                }
 
                 while (Fly.wasPressed()){
 
