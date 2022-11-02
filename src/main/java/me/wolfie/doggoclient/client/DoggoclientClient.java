@@ -44,6 +44,7 @@ public class DoggoclientClient implements ClientModInitializer {
     private static KeyBinding SlowDown;
     private static KeyBinding SpeedUP;
     private static KeyBinding Tracker;
+    private static KeyBinding plow;
     // DONT USE MinecraftClient!!! 😳😳😳
     @Override
     public void onInitializeClient() {
@@ -56,6 +57,23 @@ public class DoggoclientClient implements ClientModInitializer {
                 renderer.draw(matrixStack,Text.of("Tractor mode enabled..."),15,15,0x31A4DE);
             }
         }));
+
+        SlowDown = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.doggoclient.spdup", // The translation key of the keybinding's name
+                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                GLFW.GLFW_KEY_UP, // The keycode of the key
+                "category.doggoclient.binds"
+                // The translation key of the keybinding's category.
+
+        ));
+        SpeedUP = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.doggoclient.spddown", // The translation key of the keybinding's name
+                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                GLFW.GLFW_KEY_DOWN, // The keycode of the key
+                "category.doggoclient.binds"
+                // The translation key of the keybinding's category.
+
+        ));
 
 
         self = MinecraftClient.getInstance();
@@ -83,18 +101,29 @@ public class DoggoclientClient implements ClientModInitializer {
                 "category.doggoclient.binds"
 
         ));
+        plow = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.doggoclient.plow",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_MINUS,
+                "category.doggoclient.binds"
+
+        ));
         //if you have anything that needs to happen repeatedly, put stuff here.
         //one-time code shouldn't be here, just call MinecraftClient
 
 
 
         final AtomicReference<Vec3d> refrence = new AtomicReference<>();
-
+        final AtomicBoolean harvest = new AtomicBoolean(false);
         AtomicInteger ticks = new AtomicInteger(0);
 
             ClientTickEvents.END_CLIENT_TICK.register(client -> {
                 if(client.player != null){
-
+                /*
+                    while (plow.wasPressed()){
+                        harvest.set(harvest.get());
+                    }
+                */
                     while (Tractor.wasPressed()){
                         tractor.set(!tractor.get());
                     }
@@ -103,8 +132,12 @@ public class DoggoclientClient implements ClientModInitializer {
                         for (int x = -4; x <= 4; x++) {
                             for (int y = -4; y <= 4; y++) {
                                 for (int z = -4; z <= 4; z++) {
-                                    plant(client, client.player.getBlockPos().add(x, y, z));
+
+                                        plant(client, client.player.getBlockPos().add(x, y, z));
+
                                     Harvest(client, client.player.getBlockPos().add(x, y, z));
+
+
                                 }
                             }
                         }
@@ -140,6 +173,15 @@ public class DoggoclientClient implements ClientModInitializer {
                         client.player.getAbilities().setFlySpeed(0.05f);
                         client.player.getAbilities().flying = !client.player.getAbilities().flying;
                     }
+
+                        while (SpeedUP.wasPressed()){
+                            client.player.getAbilities().setFlySpeed(client.player.getAbilities().getFlySpeed() + 0.05f);
+                            client.player.sendMessage(Text.of("Speed at: " + client.player.getAbilities().getFlySpeed()));
+                        }
+                            while (SlowDown.wasPressed()){
+                                client.player.getAbilities().setFlySpeed(client.player.getAbilities().getFlySpeed() - 0.05f);
+                                client.player.sendMessage(Text.of("Speed at: " + client.player.getAbilities().getFlySpeed()));
+                            }
 
 
                     while (Tracker.wasPressed()) {
@@ -187,12 +229,13 @@ public class DoggoclientClient implements ClientModInitializer {
                 Destroy(Position,client);
             }else if(State.getBlock() == Blocks.BEETROOTS && State.get(AGE) == 3){
                 Destroy(Position,client);
-            }else if(State.getBlock() == Blocks.CARROTS && State.get(AGE) == 7){
-                Destroy(Position,client);
-            }else {
+            }else if(State.getBlock() == Blocks.CARROTS && State.get(AGE) == 7) {
+                Destroy(Position, client);
+            }
+           /* }else {
                 Destroy(Position,client);
             }
-
+            */ // BREAKS EVERYTHING
         }
     }
 
