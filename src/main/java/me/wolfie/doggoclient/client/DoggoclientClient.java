@@ -100,7 +100,7 @@ public class DoggoclientClient implements ClientModInitializer {
                     }
 
                     if(tractor.get()) {
-                        for (int x = -1; x <= 0; x++) {
+                        for (int x = -4; x <= 4; x++) {
                             for (int y = -4; y <= 4; y++) {
                                 for (int z = -4; z <= 4; z++) {
                                     plant(client, client.player.getBlockPos().add(x, y, z));
@@ -173,20 +173,32 @@ public class DoggoclientClient implements ClientModInitializer {
         }
     }
 
-    Block[] FarmBlocks = {Blocks.WHEAT,Blocks.BEETROOTS,Blocks.POTATOES,Blocks.CARROTS, }; // blocks like melons & pumpkins shouldn't get this treatment due to mining being needed
+    Block[] FarmBlocks = {Blocks.WHEAT,Blocks.BEETROOTS,Blocks.POTATOES,Blocks.CARROTS, Blocks.GRASS, Blocks.TALL_GRASS, Blocks.LARGE_FERN,Blocks.FERN,Blocks.DEAD_BUSH}; // blocks like melons & pumpkins shouldn't get this treatment due to mining being needed
     public void Harvest(MinecraftClient client, BlockPos Position){
         BlockState State = client.world.getBlockState(Position.up());
 
         if(Arrays.stream(FarmBlocks).anyMatch(State.getBlock()::equals)){
 
             if(State.getBlock() == Blocks.WHEAT && State.get(AGE) == 7){
-
-
-                    Vec3d BPos = new Vec3d(Position.getX()+1,Position.getY()+1,Position.getZ()+1);
-                    BlockHitResult hitRes = new BlockHitResult(BPos, Direction.UP,Position,false);
-                    client.interactionManager.attackBlock(Position.up(), Direction.UP); // DESTROY the thing
-
+                Destroy(Position,client);
+            }else if(State.getBlock() == Blocks.BEETROOTS && State.get(AGE) == 3){
+                Destroy(Position,client);
+            }else if(State.getBlock() == Blocks.POTATOES && State.get(AGE) == 7){
+                Destroy(Position,client);
+            }else if(State.getBlock() == Blocks.BEETROOTS && State.get(AGE) == 3){
+                Destroy(Position,client);
+            }else if(State.getBlock() == Blocks.CARROTS && State.get(AGE) == 7){
+                Destroy(Position,client);
+            }else {
+                Destroy(Position,client);
             }
+
         }
+    }
+
+    public void Destroy(BlockPos Position, MinecraftClient client){
+        Vec3d BPos = new Vec3d(Position.getX()+1,Position.getY()+1,Position.getZ()+1);
+        BlockHitResult hitRes = new BlockHitResult(BPos, Direction.UP,Position,false);
+        client.interactionManager.attackBlock(Position.up(), Direction.UP); // DESTROY the thing
     }
 }
