@@ -28,6 +28,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -38,7 +39,7 @@ public class DoggoclientClient implements ClientModInitializer {
 
     //grab instance
     public static MinecraftClient self;
-
+    private static KeyBinding Tractor;
     private static KeyBinding Fly;
     private static KeyBinding SlowDown;
     private static KeyBinding SpeedUP;
@@ -47,13 +48,19 @@ public class DoggoclientClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
+        AtomicBoolean tractor = new AtomicBoolean(false);
+
         HudRenderCallback.EVENT.register(((matrixStack, tickDelta) -> {
-            TextRenderer renderer = null;
-            renderer.draw(matrixStack,"test",100,100,0x31A4DE);
+            TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+            if(tractor.get()){
+                renderer.draw(matrixStack,Text.of("Tractor mode enabled..."),15,15,0x31A4DE);
+            }
         }));
 
 
         self = MinecraftClient.getInstance();
+
+
         Fly = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.doggoclient.fly", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
@@ -69,6 +76,13 @@ public class DoggoclientClient implements ClientModInitializer {
                 "category.doggoclient.binds"
 
         ));
+        Tractor = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.doggoclient.tractor",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_GRAVE_ACCENT,
+                "category.doggoclient.binds"
+
+        ));
         //if you have anything that needs to happen repeatedly, put stuff here.
         //one-time code shouldn't be here, just call MinecraftClient
 
@@ -81,11 +95,17 @@ public class DoggoclientClient implements ClientModInitializer {
             ClientTickEvents.END_CLIENT_TICK.register(client -> {
                 if(client.player != null){
 
-                    for (int x = -1; x <= 0; x++){
-                        for (int y = -4; y <= 4; y++){
-                            for (int z = -4; z <= 4; z++){
-                                plant(client,client.player.getBlockPos().add(x,y,z));
-                                Harvest(client,client.player.getBlockPos().add(x,y,z));
+                    while (Tractor.wasPressed()){
+                        tractor.set(!tractor.get());
+                    }
+
+                    if(tractor.get()) {
+                        for (int x = -1; x <= 0; x++) {
+                            for (int y = -4; y <= 4; y++) {
+                                for (int z = -4; z <= 4; z++) {
+                                    plant(client, client.player.getBlockPos().add(x, y, z));
+                                    Harvest(client, client.player.getBlockPos().add(x, y, z));
+                                }
                             }
                         }
                     }
