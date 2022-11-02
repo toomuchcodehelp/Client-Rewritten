@@ -4,6 +4,7 @@
   "package": "me.wolfie.doggoclient.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "GoofyAhhPackets"
   ],
   "client": [
   ],
