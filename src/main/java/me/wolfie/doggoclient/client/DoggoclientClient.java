@@ -12,6 +12,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -119,11 +122,11 @@ public class DoggoclientClient implements ClientModInitializer {
 
             ClientTickEvents.END_CLIENT_TICK.register(client -> {
                 if(client.player != null){
-                /*
+
                     while (plow.wasPressed()){
-                        harvest.set(harvest.get());
+                        Killaura(client);
                     }
-                */
+
                     while (Tractor.wasPressed()){
                         tractor.set(!tractor.get());
                     }
@@ -134,7 +137,7 @@ public class DoggoclientClient implements ClientModInitializer {
                                 for (int z = -4; z <= 4; z++) {
 
                                         plant(client, client.player.getBlockPos().add(x, y, z));
-                                    plowBlocks(client,client.player.getBlockPos().add(x,y,z));
+
                                     Harvest(client, client.player.getBlockPos().add(x, y, z));
 
 
@@ -142,6 +145,23 @@ public class DoggoclientClient implements ClientModInitializer {
                             }
                         }
                     }
+
+                    // less to prevent packet issues
+                    if(tractor.get()) {
+                        for (int x = -2; x <= 2; x++) {
+                            for (int y = -2; y <= 2; y++) {
+                                for (int z = -2; z <= 2; z++) {
+
+
+                                    plowBlocks(client,client.player.getBlockPos().add(x,y,z));
+
+
+
+                                }
+                            }
+                        }
+                    }
+
 
                     if(refrence.get() != null){
                         if(client.player.getPos().y >= refrence.get().y - 0.04333 && !client.player.isOnGround()){
@@ -187,7 +207,7 @@ public class DoggoclientClient implements ClientModInitializer {
                     while (Tracker.wasPressed()) {
                         for (int i = 0; i < client.player.world.getPlayers().size(); i++) {
                             List<? extends PlayerEntity> players = client.player.world.getPlayers();
-                            if (players.get(i).getName().getString() == client.getSession().getUsername()) {
+                            if (players.get(i).getName().getString() != client.getSession().getUsername()) {
                                 client.player.sendMessage(Text.of("located player at coords: " + players.get(i).getBlockPos().toShortString() + ", name: " + players.get(i).getName().getString()), false);
                             }
                             //don't use overlay, it makes it hard to find what's what
@@ -255,5 +275,16 @@ public class DoggoclientClient implements ClientModInitializer {
         Vec3d BPos = new Vec3d(Position.getX()+1,Position.getY()+1,Position.getZ()+1);
         BlockHitResult hitRes = new BlockHitResult(BPos, Direction.UP,Position,false);
         client.interactionManager.attackBlock(Position.up(), Direction.UP); // DESTROY the thing
+    }
+
+    public void Killaura(MinecraftClient client){
+        for (int i = 0; i < client.player.world.getPlayers().size(); i++) {
+            List<? extends PlayerEntity> players = client.player.world.getPlayers();
+            Entity e = players.get(i);
+
+
+            client.interactionManager.attackEntity(client.player,e);
+            //don't use overlay, it makes it hard to find what's what
+        }
     }
 }
