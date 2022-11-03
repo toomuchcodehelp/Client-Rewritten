@@ -134,7 +134,7 @@ public class DoggoclientClient implements ClientModInitializer {
                                 for (int z = -4; z <= 4; z++) {
 
                                         plant(client, client.player.getBlockPos().add(x, y, z));
-
+                                    plowBlocks(client,client.player.getBlockPos().add(x,y,z));
                                     Harvest(client, client.player.getBlockPos().add(x, y, z));
 
 
@@ -170,7 +170,7 @@ public class DoggoclientClient implements ClientModInitializer {
 
                         while (Fly.wasPressed()) {
 
-                        client.player.getAbilities().setFlySpeed(0.05f);
+
                         client.player.getAbilities().flying = !client.player.getAbilities().flying;
                     }
 
@@ -225,17 +225,29 @@ public class DoggoclientClient implements ClientModInitializer {
                 Destroy(Position,client);
             }else if(State.getBlock() == Blocks.BEETROOTS && State.get(AGE) == 3){
                 Destroy(Position,client);
-            }else if(State.getBlock() == Blocks.POTATOES && State.get(AGE) == 7){
+            }else if(State.getBlock() == Blocks.POTATOES && State.get(AGE) == 7 || State.getBlock() == Blocks.CARROTS && State.get(AGE) == 7){
                 Destroy(Position,client);
-            }else if(State.getBlock() == Blocks.BEETROOTS && State.get(AGE) == 3){
-                Destroy(Position,client);
-            }else if(State.getBlock() == Blocks.CARROTS && State.get(AGE) == 7) {
-                Destroy(Position, client);
-            }
-           /* }else {
+            }else if(State.getBlock() == Blocks.GRASS || State.getBlock() == Blocks.TALL_GRASS || State.getBlock() == Blocks.FERN || State.getBlock() == Blocks.LARGE_FERN || State.getBlock() == Blocks.DEAD_BUSH){
                 Destroy(Position,client);
             }
-            */ // BREAKS EVERYTHING
+            // just "else" BREAKS EVERYTHING
+        }
+    }
+
+
+    Item[] Tools = { Items.STONE_HOE,Items.DIAMOND_HOE,Items.IRON_HOE,Items.NETHERITE_HOE,Items.WOODEN_HOE,Items.GOLDEN_HOE };
+    public void plowBlocks(MinecraftClient client, BlockPos Position){
+
+
+        Item item = client.player.getMainHandStack().getItem();
+        if(Arrays.stream(Tools).anyMatch(item::equals)){
+            if (client.world.getBlockState(Position).getBlock().asItem() == Items.DIRT || client.world.getBlockState(Position).getBlock().asItem() == Items.GRASS_BLOCK) {
+
+                BlockHitResult hitRes = new BlockHitResult(new Vec3d(Position.getX(), Position.getY(), Position.getZ()), Direction.UP, Position, true);
+                client.interactionManager.interactBlock(client.player, Hand.MAIN_HAND, hitRes);
+
+
+            }
         }
     }
 
