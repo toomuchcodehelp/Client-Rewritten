@@ -1,5 +1,5 @@
 # Doggo-Client-Rewritten
-My personal client, fully rewritten using better code conventions
+My personal client, fully rewritten and open-sourced using better code conventions and `style`.
 
 ## 🤔 What is this?
 this is a personal client, made for use on my server.
@@ -27,7 +27,7 @@ Either:
 **You can do anything!** Just follow the AGPL and you will be fine.
 
 ## 🐞 This mod and This mod don't work together!
-expect all kinds of (🐛)s to appear when using clients that do similar things.
+expect all kinds of **(🐛)s** to appear when using clients that do similar things.
 I have solved a lot compatability issues with this, so expect most mods to be fine.
 
 # like the project? Leave a ⭐
