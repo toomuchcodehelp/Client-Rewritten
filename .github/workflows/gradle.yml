@@ -27,3 +27,5 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
+      - name: run Client
+         run: ./gradlew runClient 
