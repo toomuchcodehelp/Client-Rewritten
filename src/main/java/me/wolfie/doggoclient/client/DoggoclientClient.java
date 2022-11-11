@@ -119,6 +119,7 @@ public class DoggoclientClient implements ClientModInitializer {
         final AtomicReference<Vec3d> refrence = new AtomicReference<>();
         final AtomicBoolean harvest = new AtomicBoolean(false);
         AtomicInteger ticks = new AtomicInteger(0);
+        AtomicBoolean delay = new AtomicBoolean(false);
 
             ClientTickEvents.END_CLIENT_TICK.register(client -> {
                 if(client.player != null){
@@ -149,12 +150,13 @@ public class DoggoclientClient implements ClientModInitializer {
                     // less to prevent packet issues
                     if(tractor.get()) {
                         for (int x = -2; x <= 2; x++) {
-                            for (int y = -2; y <= 2; y++) {
+                            for (int y = -1; y <= 1; y++) {
                                 for (int z = -2; z <= 2; z++) {
 
-
-                                    plowBlocks(client,client.player.getBlockPos().add(x,y,z));
-
+                                    if(!delay.get()) {
+                                        plowBlocks(client, client.player.getBlockPos().add(x, y, z));
+                                    }
+                                    delay.set(!delay.get());
 
 
                                 }
@@ -263,8 +265,10 @@ public class DoggoclientClient implements ClientModInitializer {
         if(Arrays.stream(Tools).anyMatch(item::equals)){
             if (client.world.getBlockState(Position).getBlock().asItem() == Items.DIRT || client.world.getBlockState(Position).getBlock().asItem() == Items.GRASS_BLOCK) {
 
-                BlockHitResult hitRes = new BlockHitResult(new Vec3d(Position.getX(), Position.getY(), Position.getZ()), Direction.UP, Position, true);
-                client.interactionManager.interactBlock(client.player, Hand.MAIN_HAND, hitRes);
+
+
+                    BlockHitResult hitRes = new BlockHitResult(new Vec3d(Position.getX(), Position.getY(), Position.getZ()), Direction.UP, Position, true);
+                    client.interactionManager.interactBlock(client.player, Hand.MAIN_HAND, hitRes);
 
 
             }
@@ -284,7 +288,6 @@ public class DoggoclientClient implements ClientModInitializer {
 
 
             client.interactionManager.attackEntity(client.player,e);
-            //don't use overlay, it makes it hard to find what's what
         }
     }
 }
