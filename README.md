@@ -15,7 +15,7 @@ If it is out of scope, you can always keep a fork.
 ## ⌛ Updates are taking forever!
 There are a few reasons why a commit may not be released in a reasonable time period.
 1. **research doesn't have a fixed amount of time.** Some features may take longer to develop than others.
-2. **I forgor 💀** to my latest commit.
+2. **I forgor 💀** to push my latest commit.
 
 ## 😭 I got banned on a server!
 **this project is made for anarchy/private server use.**
