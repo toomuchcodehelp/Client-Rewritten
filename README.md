@@ -1,4 +1,4 @@
-# Doggo-Client-Rewritten
+# Client-Rewritten
 My personal client, fully rewritten and open-sourced using better code conventions and `style`.
 
 ## 🤔 What is this?
