@@ -12,6 +12,11 @@ probably never, as it is always evolving.
 You can! Either file a PR, or create an issue.
 If it is out of scope, you can always keep a fork.
 
+## ⌛ Updates are taking forever!
+There are a few reasons why a commit may not be released in a reasonable time period.
+1. **research doesn't have a fixed amount of time.** Some features may take longer to develop than others.
+2. **I forgor 💀** to my latest commit.
+
 ## 😭 I got banned on a server!
 **this project is made for anarchy/private server use.**
 Using this project for other things and **getting banned is all on you.**
